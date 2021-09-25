@@ -20,6 +20,18 @@ struct ContentView: View {
         NavigationView {
             Form {
                 Section {
+                    HStack {
+                        Spacer()
+                        Button(action: calculateBedTime) {
+                            Text("Calculate bed time")
+                        }
+                        Spacer()
+                    }
+                    Text(alertTitle)
+                        .font(.headline)
+                }
+
+                Section {
                     Text("When do you want to wake up?")
                         .font(.headline)
 
@@ -28,19 +40,13 @@ struct ContentView: View {
                         .datePickerStyle(WheelDatePickerStyle())
                 }
 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Desired amount of sleep")
-                        .font(.headline)
-
+                Section(header: Text("Desired amount of sleep")) {
                     Stepper(value: $sleepAmount, in: 4...12, step: 0.25) {
                         Text("\(sleepAmount, specifier: "%g") hours")
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Daily coffee intake")
-                        .font(.headline)
-
+                Section(header: Text("Daily coffee intake")) {
                     Stepper(value: $coffeeAmount, in: 1...20) {
                         if coffeeAmount == 1 {
                             Text("1 cup")
@@ -50,18 +56,19 @@ struct ContentView: View {
                     }
                 }
 
-                Section {
-                    HStack{
-                        Spacer()
-                        Button(action: calculateBedTime) {
-                            Text("Calculate bed time")
-                        }
-                        Spacer()
-                    }
-                    .padding()
-
-                    Text(alertTitle)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Daily coffee intake \(coffeeAmount)")
                         .font(.headline)
+                    Picker(selection: $coffeeAmount, label: Text("Daily coffee intake")){
+                        ForEach( 0 ..< 9) { num in
+                            if num <= 1 {
+                                Text("1 cup")
+                            } else {
+                                Text( "\(num) cups")
+                            }
+                        }
+                    }
+                    .pickerStyle(WheelPickerStyle())
                 }
             }
             .navigationBarTitle("Better Rest")
